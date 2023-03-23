@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simon Says</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        main {
+            width: fit-content;
+        }
+
+        button {
+            padding: 2rem;
+            border-radius: 50%;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .blink {
+            animation-name: blink;
+            animation-duration: 1s;
+            animation-delay: 0s;
+        }
+
+        .button-holder {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0;
+                background-color: black;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<p>
+    Welcome to Simon Says! In this game, you will see four colored buttons: red, green, blue, and yellow. To play, just
+    watch the game as it plays a sequence of colors for you. Then, repeat that sequence by clicking the buttons in the
+    same order.
+</p>
+<p>
+    If you correctly repeat the sequence, the game will add another color and play the longer sequence again. As you
+    play, the game will get more difficult by adding more colors to the sequence. But be careful! If you make a mistake
+    and click the wrong button, the game will end and you'll have to start over.
+</p>
+<p>
+    To start playing, just click the 'Start' button. Then, pay attention to the sequence of colors and repeat them by
+    clicking the buttons in the same order. If you get stuck or need help, don't worry - the game will give you feedback
+    if you make a mistake, such as by flashing the correct sequence or displaying a message.
+</p>
+<p>
+    The goal of the game is to repeat the longest possible sequence of colors. Can you beat your high score and become a
+    Simon Says champion? Give it a try and find out!
+</p>
+
+<main>
+    <div class="button-holder">
+        <button id="new-game">New Game</button>
+        <button id="next-level">Next Level</button>
+    </div>
+
+    <div class="button-holder">
+        <button class="red" id="red">Red</button>
+        <button class="green" id="green">Green</button>
+        <button class="blue" id="blue">Blue</button>
+        <button class="yellow" id="yellow">Yellow</button>
+    </div>
+</main>
+
+<script src="index.js"></script>
+</body>
+</html>
