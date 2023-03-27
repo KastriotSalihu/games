@@ -24,7 +24,7 @@ const addKeyBoardEvents = (engine): void => {
     }, false);
 }
 
-const getCanvas = (rows, columns, blockSize): HTMLCanvasElement => {
+const getCanvas = (rows: number, columns: number, blockSize: number): HTMLCanvasElement => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     canvas.height = rows * blockSize;
     canvas.width = columns * blockSize;

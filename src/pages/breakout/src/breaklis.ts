@@ -1,9 +1,13 @@
-import {Engine} from "../../libs/shared/engine.js";
-import {PlayArea} from "../../libs/shared/play-area.js";
-import {Canvas, Circle, Group, Movable, Rectangle, Square} from "../../libs/plis/index.js";
-import {GameMap, GameMapCoordinates} from "../../libs/shared/2D-game-map.js";
-import {GameMapToCanvasConverter} from "../../libs/shared/coordinate-converter.js";
-import {ShapeMover, Velocity} from "../../libs/shared/shape-mover.js";
+import {
+    Engine,
+    GameMapToCanvasConverter,
+    ShapeMover,
+    Velocity,
+    PlayArea,
+    GameMap,
+    GameMapCoordinates
+} from "../../../libs/shared";
+import {Canvas, Circle, Group, Movable, Rectangle, Square} from "../../../libs/plis";
 
 type EngineProperties = {
     blockSize: number,

@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "target": "ESNext",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outDir": "./dist",
     "rootDir": ".",
-    "outDir": "dist",
   },
 }

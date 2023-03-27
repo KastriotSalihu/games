@@ -1,8 +1,5 @@
-import {Canvas, Movable, Group, Rectangle, Shape} from "../../libs/plis/index.js";
-import {Engine} from "../../libs/shared/engine.js";
-import {GameMapCoordinates, GameMap} from "../../libs/shared/2D-game-map.js";
-import {PlayArea} from "../../libs/shared/play-area.js";
-import {GameMapToCanvasConverter} from "../../libs/shared/coordinate-converter.js";
+import {Canvas, Movable, Group, Rectangle, Shape} from "../../../libs/plis";
+import {Engine, GameMapCoordinates, GameMap, GameMapToCanvasConverter,PlayArea} from "../../../libs/shared";
 
 type TetrominoTemplate = string[];
 type BlockOptions = {
@@ -278,7 +275,6 @@ class AreaMap extends GameMap<Movable> {
         this.occupationMap = this.occupationMap.filter(row => row.some(cell => cell === null));
         this.occupationMap.splice(0, 0, ...this.getNEmptyRows(numberOfRowsToInsert))
     }
-
 }
 
 class FillSkylineHelper {

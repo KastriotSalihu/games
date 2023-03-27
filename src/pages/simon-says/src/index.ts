@@ -1,13 +1,13 @@
-const colorSequenceValueMap = new Map();
+const colorSequenceValueMap = new Map<string, number>();
 colorSequenceValueMap.set("red", 1);
 colorSequenceValueMap.set("green", 2);
 colorSequenceValueMap.set("blue", 3);
 colorSequenceValueMap.set("yellow", 4);
 
-const redBtn = document.getElementById("red");
-const greenBtn = document.getElementById("green");
-const blueBtn = document.getElementById("blue");
-const yellowBtn = document.getElementById("yellow");
+const redBtn = document.getElementById("red") as HTMLButtonElement;
+const greenBtn = document.getElementById("green") as HTMLButtonElement;
+const blueBtn = document.getElementById("blue") as HTMLButtonElement;
+const yellowBtn = document.getElementById("yellow") as HTMLButtonElement;
 const sequencedButtons = {
     1: redBtn,
     2: greenBtn,
