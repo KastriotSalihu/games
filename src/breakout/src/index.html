@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Breakout</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+        }
+
+        header {
+            margin: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        main {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-area {
+            display: flex;
+            border: 10px solid red;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="score">
+        <p>Score</p>
+        <p>TBD</p>
+    </div>
+</header>
+
+<main>
+
+    <div class="game-area">
+        <canvas id="canvas">
+        </canvas>
+    </div>
+
+</main>
+
+<article>
+    <h3>How to play</h3>
+    <ul>Use arrows to moveInDirection board around</ul>
+    <ul>Use space bar to throw ball</ul>
+    <ul>Press 'P' to pause the game</ul>
+</article>
+<script type="module" src="index.js"></script>
+
+</body>
+</html>

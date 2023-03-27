@@ -1,7 +1,9 @@
 import {Engine} from "../../libs/shared/engine.js";
-import {Canvas, Collection, Drawable, Movable, Shape, Square} from "../../libs/plis/plis.js";
+import {Canvas, Collection, Drawable, Movable, Shape, Square} from "../../libs/plis/index.js";
 import {Coordinate, GameMap} from "../../libs/shared/2D-game-map.js";
 import {PlayArea} from "../../libs/shared/play-area.js";
+import {GameMapToCanvasConverter} from "../../libs/shared/coordinate-converter.js";
+import {Direction, ShapeMover} from "../../libs/shared/shape-mover.js";
 
 type EngineProperties = {
     blockSize: number
@@ -11,13 +13,13 @@ export class SnakeEngine extends Engine {
     private areaMap: AreaMap;
     private playArea: SnakePlayArea;
     private lifecycleIntervalId: ReturnType<typeof setInterval>
-    private coordinateConverter: GridToCanvasConverter;
+    private coordinateConverter: GameMapToCanvasConverter;
 
     constructor(canvas: HTMLCanvasElement, private properties: EngineProperties) {
         super();
-        this.playArea = new SnakePlayArea(new Canvas(canvas));
+        this.playArea = new SnakePlayArea(new Canvas(canvas, {withAnimations: {fillStyle: "rgba(255, 255, 255, 0.7)"}}));
         this.areaMap = new AreaMap(Math.floor(canvas.height / properties.blockSize), Math.floor(canvas.width / properties.blockSize), properties.blockSize);
-        this.coordinateConverter = new GridToCanvasConverter(properties.blockSize);
+        this.coordinateConverter = new GameMapToCanvasConverter(properties.blockSize, properties.blockSize);
 
         this.keyBinds.map("KeyF", "Fruit");
         this.keyBinds.setAction("Fruit", (event) => this.fireNewFruit(event));
@@ -321,7 +323,7 @@ class Snake extends Collection<Drawable> {
 
     private placePieceAheadOfOtherPiece(movingPiece: Shape, direction: Direction, absolutePiece: Shape) {
         movingPiece.setPosition(absolutePiece.position);
-        this.shapeMover.move(movingPiece, direction);
+        this.shapeMover.moveInDirection(movingPiece, direction);
     }
 
     private getPieceToBePlacedInFrontOfHead() {
@@ -387,74 +389,4 @@ class SnakeBody extends Square {
     public discolor() {
         this.fill = "yellow";
     }
-}
-
-enum Direction {
-    ArrowUp = "ArrowUp",
-    ArrowDown = "ArrowDown",
-    ArrowLeft = "ArrowLeft",
-    ArrowRight = "ArrowRight",
-
-    None = "None",
-}
-
-class ShapeMover {
-
-    private movements = {
-        [Direction.ArrowUp]: {x: 0, y: -1, opposite: () => this.movements[Direction.ArrowDown]},
-        [Direction.ArrowDown]: {x: 0, y: 1, opposite: () => this.movements[Direction.ArrowUp]},
-        [Direction.ArrowLeft]: {x: -1, y: 0, opposite: () => this.movements[Direction.ArrowRight]},
-        [Direction.ArrowRight]: {x: 1, y: 0, opposite: () => this.movements[Direction.ArrowLeft]}
-    };
-
-    constructor(private blockSize: number) {
-    }
-
-    public move(shape: Movable, direction: Direction) {
-        shape.move({
-            x: this.movements[direction].x * this.blockSize,
-            y: this.movements[direction].y * this.blockSize
-        })
-    }
-
-    public getMovementDirection(positionDifference: { x: number, y: number }): Direction {
-        const {x, y} = positionDifference;
-        if (x === 0 && y < 0) {
-            return Direction.ArrowUp;
-        } else if (x === 0 && y > 0) {
-            return Direction.ArrowDown;
-        }
-        if (x < 0 && y === 0) {
-            return Direction.ArrowLeft;
-        } else if (x > 0 && y === 0) {
-            return Direction.ArrowRight;
-        }
-        return null;
-    }
-
-}
-
-class GridToCanvasConverter {
-
-    constructor(private blockSize: number) {
-    }
-
-    public getGrid(coordinate: number) {
-        return coordinate / this.blockSize;
-    }
-
-    public getCoordinate(grid: number) {
-        return grid * this.blockSize;
-    }
-
-    public convertToAreaMapCoordinate(position: { x: number, y: number }): Coordinate | null {
-        if (!position) {
-            return null;
-        }
-        return {
-            row: this.getGrid(position.y),
-            column: this.getGrid(position.x)
-        }
-    }
-
 }

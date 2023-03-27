@@ -1,4 +1,4 @@
-import {Canvas, Drawable} from "../plis/plis";
+import {Canvas, Drawable} from "../plis/index.js";
 
 export class PlayArea {
     constructor(private canvas: Canvas) {

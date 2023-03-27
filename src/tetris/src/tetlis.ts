@@ -1,9 +1,9 @@
-import {Canvas, Movable, Group, Rectangle, Shape} from "../../libs/plis/plis.js";
+import {Canvas, Movable, Group, Rectangle, Shape} from "../../libs/plis/index.js";
 import {Engine} from "../../libs/shared/engine.js";
-import {Coordinate, GameMap} from "../../libs/shared/2D-game-map.js";
+import {GameMapCoordinates, GameMap} from "../../libs/shared/2D-game-map.js";
 import {PlayArea} from "../../libs/shared/play-area.js";
+import {GameMapToCanvasConverter} from "../../libs/shared/coordinate-converter.js";
 
-type AreaMapCoordinates = Array<{ point: Coordinate, artifact: Movable }>;
 type TetrominoTemplate = string[];
 type BlockOptions = {
     size: number,
@@ -174,7 +174,7 @@ export class TetrisEngine extends Engine {
 
     private attemptToRotateTetromino(tetromino: Tetromino, clockwise: boolean): boolean {
         let rotatedSuccessfully = true;
-        // TODO: if overlapping is avoidable by moving the artifact after rotation, move the artifact
+        // TODO: if overlapping is avoidable by moving the artifact after rotation, moveInDirection the artifact
         tetromino.rotate(clockwise);
         const isValidPosition = this.areaMap.isValidPosition(tetromino.toAreaMapCoordinates());
         if (!isValidPosition) {
@@ -227,7 +227,7 @@ class AreaMap extends GameMap<Movable> {
         super(height, width, blockSize);
     }
 
-    public isValidPosition(tetrominoGrid: AreaMapCoordinates): boolean {
+    public isValidPosition(tetrominoGrid: GameMapCoordinates): boolean {
         for (const gridElement of tetrominoGrid) {
             if (this.isOutsideMapBoundaries(gridElement.point.row, gridElement.point.column) ||
                 this.isOccupied(gridElement.point.row, gridElement.point.column)) {
@@ -245,17 +245,6 @@ class AreaMap extends GameMap<Movable> {
         })
         this.removeFilledRowsAndInsertEmptyOnes(filledRows.length);
         return deletedShapes;
-    }
-
-    public static getCoordinates(shapes: Movable[], relativePosition: { row: number, column: number }, blockSize: number): AreaMapCoordinates {
-        const {row: tetrominoRow, column: tetrominoColumn} = relativePosition;
-        return shapes.map(shape => ({
-            point: {
-                row: tetrominoRow + TetrominoGridToAreMapCoordinateConverter.getGrid(shape.position.y, blockSize),
-                column: tetrominoColumn + TetrominoGridToAreMapCoordinateConverter.getGrid(shape.position.x, blockSize),
-            },
-            artifact: shape
-        }))
     }
 
     public getOccupationMap() {
@@ -337,24 +326,12 @@ class FillSkylineHelper {
     }
 }
 
-class TetrominoGridToAreMapCoordinateConverter {
-
-    public static getGrid(coordinate: number, blockSize: number) {
-        return coordinate / blockSize;
-    }
-
-    public static getCoordinate(grid: number, blockSize: number) {
-        return blockSize * grid;
-    }
-
-}
-
 interface ITetromino {
     move(position: { x: number, y: number }): Tetromino;
 
     rotate(clockwise: boolean): Tetromino;
 
-    toAreaMapCoordinates(): AreaMapCoordinates;
+    toAreaMapCoordinates(): GameMapCoordinates;
 
     getDrawable(): Movable;
 }
@@ -362,9 +339,11 @@ interface ITetromino {
 export class Tetromino implements ITetromino {
     private readonly shape: Group = new Group({x: 0, y: 0}, []);
     private readonly tetrominoGrid: TetrominoGrid;
+    private readonly coordinateConverter: GameMapToCanvasConverter
 
     constructor(private options: BlockOptions, template: TetrominoTemplate) {
         const parser = new TetrominoTemplateParser();
+        this.coordinateConverter = new GameMapToCanvasConverter(options.size, options.size);
         this.tetrominoGrid = parser.getTetrominoGrid(template, options);
         this.addGridShapes();
         this.setBlockPositions();
@@ -378,7 +357,7 @@ export class Tetromino implements ITetromino {
     /**
      * returns an array of the grid positions of the blocks of the tetromino in absolute coords
      */
-    public toAreaMapCoordinates(): AreaMapCoordinates {
+    public toAreaMapCoordinates(): GameMapCoordinates {
         const relativePosition = {row: this.row, column: this.column};
         return AreaMap.getCoordinates(this.shape.getShapes(), relativePosition, this.options.size);
     }
@@ -395,10 +374,10 @@ export class Tetromino implements ITetromino {
 
     private setBlockPositions() {
         this.tetrominoGrid.iterateShapes((shape, row, column) => {
-            const y = TetrominoGridToAreMapCoordinateConverter.getCoordinate(row, this.options.size);
+            const y = this.coordinateConverter.getCoordinate(row);
             shape.setPosition({
                 y,
-                x: TetrominoGridToAreMapCoordinateConverter.getCoordinate(Number(column), this.options.size)
+                x: this.coordinateConverter.getCoordinate(Number(column))
             })
         })
     }
@@ -421,11 +400,11 @@ export class Tetromino implements ITetromino {
     }
 
     private get row() {
-        return TetrominoGridToAreMapCoordinateConverter.getGrid(this.shape.position.y, this.options.size);
+        return this.coordinateConverter.getGrid(this.shape.position.y);
     }
 
     private get column() {
-        return TetrominoGridToAreMapCoordinateConverter.getGrid(this.shape.position.x, this.options.size);
+        return this.coordinateConverter.getGrid(this.shape.position.x);
     }
 }
 
