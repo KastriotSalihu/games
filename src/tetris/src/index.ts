@@ -1,11 +1,11 @@
-import {TetrominoFactory, TetrisEngine, Tetromino} from "./tetlis.js";
+import {TetrominoFactory, TetrisEngine, Tetromino, ITetrominoFactory} from "./tetlis.js";
 
-const main = () => {
+const main = (): void => {
     const engine = createEngine();
     engine.start();
 }
 
-const createEngine = () => {
+const createEngine = (): TetrisEngine => {
     const blockSize = 30;
     const canvas = getCanvas(20, 10, blockSize)
     const engine = new TetrisEngine(canvas, getTetrominoFactory(false), {blockSize});
@@ -13,7 +13,7 @@ const createEngine = () => {
     return engine;
 }
 
-const addKeyBoardEvents = (engine) => {
+const addKeyBoardEvents = (engine): void => {
     document.addEventListener('keydown', (event) => {
         if (event.code === "Space") {
             engine.nextTetromino();
@@ -24,14 +24,14 @@ const addKeyBoardEvents = (engine) => {
     }, false);
 }
 
-const getCanvas = (rows, columns, blockSize) => {
-    const canvas = document.getElementById("canvas");
+const getCanvas = (rows, columns, blockSize): HTMLCanvasElement => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     canvas.height = rows * blockSize;
     canvas.width = columns * blockSize;
     return canvas;
 }
 
-const getTetrominoFactory = (random = false) => {
+const getTetrominoFactory = (random = false): ITetrominoFactory => {
     if (random) {
         return new RandomTetrominoFactory();
     } else {
@@ -39,9 +39,9 @@ const getTetrominoFactory = (random = false) => {
     }
 }
 
-class RandomTetrominoFactory {
+class RandomTetrominoFactory implements ITetrominoFactory {
 
-    getNext(options) {
+    getNext(options): Tetromino {
         const template = this.getRandomTemplate(4, 5, 4, 5);
         return new Tetromino(options, template);
     }
@@ -55,7 +55,7 @@ class RandomTetrominoFactory {
         return template;
     }
 
-    getRandomRowTemplate(minColumn, maxColumn) {
+    getRandomRowTemplate(minColumn, maxColumn): string {
         let rowTemplate = "";
         const columns = this.randomIntFromInterval(minColumn, maxColumn);
         for (let j = 0; j < columns; j++) {
@@ -65,11 +65,11 @@ class RandomTetrominoFactory {
         return rowTemplate;
     }
 
-    randomBoolean() {
+    randomBoolean(): boolean {
         return Math.random() < 0.5;
     }
 
-    randomIntFromInterval(min, max) { // min and max included
+    randomIntFromInterval(min, max): number { // min and max included
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
 }

@@ -57,6 +57,7 @@ export class BreakoutEngine extends Engine {
         })
         this.playArea.actionable = paddle;
         this.createBricks();
+        this.addNewBall();
         this.startLifecycle();
     }
 
@@ -82,6 +83,10 @@ export class BreakoutEngine extends Engine {
     }
 
     private fireNewBall(_: KeyboardEvent) {
+        this.addNewBall();
+    }
+
+    private addNewBall() {
         const paddle = this.playArea.actionable;
         const drawable = paddle.getDrawable();
         const newBallPosition = {x: drawable.position.x, y: drawable.position.y + 1}

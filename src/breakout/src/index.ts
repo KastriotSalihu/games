@@ -1,4 +1,4 @@
-import {SnakeEngine} from "./sneklis.js";
+import {BreakoutEngine} from "./breaklis.js";
 
 const main = () => {
     const engine = createEngine();
@@ -6,9 +6,11 @@ const main = () => {
 }
 
 const createEngine = () => {
-    const blockSize = 30;
-    const canvas = getCanvas(20, 10, blockSize)
-    const engine = new SnakeEngine(canvas, {blockSize: 20});
+    const blockSize = 50;
+    const rows = 10;
+    const columns = 14;
+    const canvas = getCanvas(rows, columns, blockSize)
+    const engine = new BreakoutEngine(canvas, {blockSize, rows, columns});
     addKeyBoardEvents(engine);
     return engine;
 }
@@ -20,8 +22,8 @@ const addKeyBoardEvents = (engine) => {
     }, false);
 }
 
-const getCanvas = (rows, columns, blockSize) => {
-    const canvas = document.getElementById("canvas");
+const getCanvas = (rows, columns, blockSize): HTMLCanvasElement => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     canvas.height = rows * blockSize;
     canvas.width = columns * blockSize;
     return canvas;

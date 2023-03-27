@@ -1,0 +1,22 @@
+{
+  "name": "games",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "postbuild": "cp -R './public/' './dist/html/'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KastriotSalihu/games.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KastriotSalihu/games/issues"
+  },
+  "homepage": "https://github.com/KastriotSalihu/games#readme"
+}
